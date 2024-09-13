@@ -1,0 +1,12 @@
+{
+  "name": "metric",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "prettier": "^3.3.3"
+  }
+}
