@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 
+let lastGitHubStars = 0;
 app.get("/", async (req, res) => {
   const data = await (
     await fetch("https://api.github.com/repos/gitroomhq/postiz-app")
@@ -10,12 +11,17 @@ app.get("/", async (req, res) => {
     // icon_type: "alert",
     // lifeTime: 5000,
     // model: {
-      frames: [
-        {
-          icon: "306",
-          text: data.stargazers_count,
+    frames: [
+      {
+        goalData: {
+          start: lastGitHubStars,
+          current: data.stargazers_count,
+          end: data.stargazers_count,
+          unit: "",
         },
-      ],
+        icon: 305,
+      },
+    ],
     //   sound: {
     //     category: "notifications",
     //     id: "cat",
