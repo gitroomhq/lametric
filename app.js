@@ -48,7 +48,7 @@ app.get("/stripe", async (req, res) => {
           start: lastMrr,
           current: mrr,
           end: mrr,
-          unit: "",
+          unit: "$",
         },
         icon: 62439,
         duration: 10000,
