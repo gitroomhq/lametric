@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 
 let lastGitHubStars = 0;
-app.get("/", async (req, res) => {
+app.get("/github", async (req, res) => {
   const data = await (
     await fetch("https://api.github.com/repos/gitroomhq/postiz-app")
   ).json();
