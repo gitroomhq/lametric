@@ -1,16 +1,84 @@
+require("@dotenvx/dotenvx").config();
 const express = require("express");
 const app = express();
-
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 let lastGitHubStars = 0;
+
+const loadAllStripeSubscriptions = async (cursor) => {
+  const subscriptions = await stripe.subscriptions.list({
+    status: "all",
+    limit: 100,
+    starting_after: cursor,
+  });
+
+  if (subscriptions.data.length === 100) {
+    return [
+      ...subscriptions.data,
+      ...(await loadAllStripeSubscriptions(
+        subscriptions.data[subscriptions.data.length - 1].id,
+      )),
+    ];
+  }
+  return subscriptions.data;
+};
+
+let lastMrr = 0;
+let lastSubs = 0;
+let lastTrials = 0;
+
+app.get("/stripe", async (req, res) => {
+  const loadAllSubscriptions = (await loadAllStripeSubscriptions()).filter(
+    (f) => f.status === "active" || f.status === "trialing",
+  );
+  const active = loadAllSubscriptions.filter((f) => f.status === "active");
+  const trialing = loadAllSubscriptions.filter((f) => f.status === "trialing");
+  const mrr = active.reduce((acc, item) => {
+    const amount = item.plan.amount / 100; // Convert from cents to dollars
+    const interval = item.plan.interval;
+    return acc + (interval === "month" ? amount : amount / 12);
+  }, 0);
+
+  return res.status(200).json({
+    frames: [
+      {
+        text: "MRR",
+        duration: 3000,
+        goalData: {
+          start: lastMrr,
+          current: mrr,
+          end: 100000,
+        },
+        icon: 9177,
+      },
+      {
+        text: "SUBS",
+        duration: 3000,
+        goalData: {
+          start: lastSubs,
+          current: active.length,
+          end: 100000,
+        },
+        icon: 23776,
+      },
+      {
+        text: "TRAILS",
+        duration: 3000,
+        goalData: {
+          start: lastTrials,
+          current: trialing.length,
+          end: 100000,
+        },
+        icon: 45197,
+      },
+    ],
+  });
+});
+
 app.get("/github", async (req, res) => {
   const data = await (
     await fetch("https://api.github.com/repos/gitroomhq/postiz-app")
   ).json();
   return res.status(200).json({
-    // priority: "critical",
-    // icon_type: "alert",
-    // lifeTime: 5000,
-    // model: {
     frames: [
       {
         goalData: {
@@ -22,13 +90,6 @@ app.get("/github", async (req, res) => {
         icon: 14925,
       },
     ],
-    //   sound: {
-    //     category: "notifications",
-    //     id: "cat",
-    //     repeat: 1,
-    //   },
-    //   cycles: 1,
-    // },
   });
 });
 
