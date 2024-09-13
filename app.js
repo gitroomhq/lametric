@@ -121,7 +121,7 @@ app.get("/github", async (req, res) => {
     ],
   });
 
-  lastGitHubStars = stars;
+  lastGitHubStars = +stars;
 });
 
 app.listen(process.env.PORT || 3005, () => {
