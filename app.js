@@ -56,7 +56,7 @@ app.get("/stripe", async (req, res) => {
           unit: "",
         },
         icon: 9177,
-        duration: 3000,
+        duration: 5000,
       },
       {
         text: "SUBS",
@@ -71,7 +71,7 @@ app.get("/stripe", async (req, res) => {
           unit: "",
         },
         icon: 23776,
-        duration: 3000,
+        duration: 5000,
       },
       {
         text: "TRAILS",
@@ -86,7 +86,7 @@ app.get("/stripe", async (req, res) => {
           unit: "",
         },
         icon: 45197,
-        duration: 3000,
+        duration: 5000,
       },
     ],
   });
