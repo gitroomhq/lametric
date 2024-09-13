@@ -6,23 +6,23 @@ app.get("/", async (req, res) => {
     await fetch("https://api.github.com/repos/gitroomhq/postiz-app")
   ).json();
   return res.status(200).json({
-    priority: "critical",
-    icon_type: "alert",
-    lifeTime: 5000,
-    model: {
+    // priority: "critical",
+    // icon_type: "alert",
+    // lifeTime: 5000,
+    // model: {
       frames: [
         {
           icon: "306",
           text: data.stargazers_count,
         },
       ],
-      sound: {
-        category: "notifications",
-        id: "cat",
-        repeat: 1,
-      },
-      cycles: 1,
-    },
+    //   sound: {
+    //     category: "notifications",
+    //     id: "cat",
+    //     repeat: 1,
+    //   },
+    //   cycles: 1,
+    // },
   });
 });
 
