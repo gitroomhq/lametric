@@ -51,7 +51,7 @@ app.get("/stripe", async (req, res) => {
           unit: "",
         },
         icon: 62439,
-        duration: 5000,
+        duration: 10000,
       },
       {
         goalData: {
@@ -61,7 +61,7 @@ app.get("/stripe", async (req, res) => {
           unit: "",
         },
         icon: 62440,
-        duration: 5000,
+        duration: 10000,
       },
       {
         goalData: {
@@ -70,8 +70,8 @@ app.get("/stripe", async (req, res) => {
           end: trialing.length,
           unit: "",
         },
-        icon: 62441,
-        duration: 5000,
+        icon: 62443,
+        duration: 10000,
       },
     ],
   });
