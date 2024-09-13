@@ -45,33 +45,45 @@ app.get("/stripe", async (req, res) => {
     frames: [
       {
         text: "MRR",
-        duration: 3000,
+        duration: 500,
+        icon: 9177,
+      },
+      {
         goalData: {
           start: lastMrr,
           current: mrr,
           end: mrr,
         },
         icon: 9177,
+        duration: 3000,
       },
       {
         text: "SUBS",
-        duration: 3000,
+        duration: 500,
+        icon: 23776,
+      },
+      {
         goalData: {
           start: lastSubs,
           current: active.length,
           end: active.length,
         },
         icon: 23776,
+        duration: 3000,
       },
       {
         text: "TRAILS",
-        duration: 3000,
+        duration: 500,
+        icon: 45197,
+      },
+      {
         goalData: {
           start: lastTrials,
           current: trialing.length,
           end: trialing.length,
         },
         icon: 45197,
+        duration: 3000,
       },
     ],
   });
@@ -87,7 +99,10 @@ app.get("/github", async (req, res) => {
   ).text();
 
   const dom = new JSDOM(data);
-  const stars = dom.window.document.querySelector("#repo-stars-counter-star").getAttribute('title').replace(/,/g, '');
+  const stars = dom.window.document
+    .querySelector("#repo-stars-counter-star")
+    .getAttribute("title")
+    .replace(/,/g, "");
 
   res.status(200).json({
     frames: [
