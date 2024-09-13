@@ -44,24 +44,14 @@ app.get("/stripe", async (req, res) => {
   res.status(200).json({
     frames: [
       {
-        text: "MRR",
-        duration: 500,
-        icon: 9177,
-      },
-      {
         goalData: {
           start: lastMrr,
           current: mrr,
           end: mrr,
           unit: "",
         },
-        icon: 9177,
+        icon: 62439,
         duration: 5000,
-      },
-      {
-        text: "SUBS",
-        duration: 500,
-        icon: 23776,
       },
       {
         goalData: {
@@ -70,13 +60,8 @@ app.get("/stripe", async (req, res) => {
           end: active.length,
           unit: "",
         },
-        icon: 23776,
+        icon: 62440,
         duration: 5000,
-      },
-      {
-        text: "TRAILS",
-        duration: 500,
-        icon: 45197,
       },
       {
         goalData: {
@@ -85,7 +70,7 @@ app.get("/stripe", async (req, res) => {
           end: trialing.length,
           unit: "",
         },
-        icon: 45197,
+        icon: 62441,
         duration: 5000,
       },
     ],
