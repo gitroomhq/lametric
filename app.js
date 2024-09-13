@@ -2,6 +2,9 @@ require("@dotenvx/dotenvx").config();
 const express = require("express");
 const app = express();
 const stripe = require("stripe")(process.env.STRIPE_KEY);
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+
 let lastGitHubStars = 0;
 
 const loadAllStripeSubscriptions = async (cursor) => {
@@ -38,7 +41,7 @@ app.get("/stripe", async (req, res) => {
     return acc + (interval === "month" ? amount : amount / 12);
   }, 0);
 
-  return res.status(200).json({
+  res.status(200).json({
     frames: [
       {
         text: "MRR",
@@ -46,7 +49,7 @@ app.get("/stripe", async (req, res) => {
         goalData: {
           start: lastMrr,
           current: mrr,
-          end: 100000,
+          end: mrr,
         },
         icon: 9177,
       },
@@ -56,7 +59,7 @@ app.get("/stripe", async (req, res) => {
         goalData: {
           start: lastSubs,
           current: active.length,
-          end: 100000,
+          end: active.length,
         },
         icon: 23776,
       },
@@ -66,31 +69,41 @@ app.get("/stripe", async (req, res) => {
         goalData: {
           start: lastTrials,
           current: trialing.length,
-          end: 100000,
+          end: trialing.length,
         },
         icon: 45197,
       },
     ],
   });
+
+  lastMrr = mrr;
+  lastSubs = active.length;
+  lastTrials = trialing.length;
 });
 
 app.get("/github", async (req, res) => {
   const data = await (
-    await fetch("https://api.github.com/repos/gitroomhq/postiz-app")
-  ).json();
-  return res.status(200).json({
+    await fetch("https://github.com/gitroomhq/postiz-app")
+  ).text();
+
+  const dom = new JSDOM(data);
+  const stars = dom.window.document.querySelector("#repo-stars-counter-star").getAttribute('title').replace(/,/g, '');
+
+  res.status(200).json({
     frames: [
       {
         goalData: {
           start: lastGitHubStars,
-          current: data.stargazers_count,
-          end: data.stargazers_count,
+          current: +stars,
+          end: +stars,
           unit: "",
         },
         icon: 14925,
       },
     ],
   });
+
+  lastGitHubStars = stars;
 });
 
 app.listen(process.env.PORT || 3005, () => {
