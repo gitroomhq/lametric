@@ -95,7 +95,7 @@ app.get("/stripe", async (req, res) => {
       },
       {
         goalData: {
-          start: lastSubs,
+          start: process.env.lastSubs,
           current: active.length,
           end: 350,
           unit: process.env.lastSubs === 0 ? "" : process.env.lastSubs > active.length ? "-" : "+",
