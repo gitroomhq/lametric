@@ -56,7 +56,7 @@ app.get("/users", async (req, res) => {
     frames: [
       {
         goalData: {
-          start: process.env.lastUsers,
+          start: 0,
           current: users,
           end: 10000,
           unit: process.env.lastUsers === 0 ? "" : process.env.lastUsers > users ? "-" : "+",
@@ -85,7 +85,7 @@ app.get("/stripe", async (req, res) => {
     frames: [
       {
         goalData: {
-          start: process.env.lastMrr,
+          start: 0,
           current: mrr,
           end: 10000,
           unit: process.env.lastMrr === 0 ? "" : process.env.lastMrr > mrr ? "-" : "+",
@@ -95,7 +95,7 @@ app.get("/stripe", async (req, res) => {
       },
       {
         goalData: {
-          start: process.env.lastSubs,
+          start: 0,
           current: active.length,
           end: 350,
           unit: process.env.lastSubs === 0 ? "" : process.env.lastSubs > active.length ? "-" : "+",
@@ -105,7 +105,7 @@ app.get("/stripe", async (req, res) => {
       },
       {
         goalData: {
-          start: process.env.lastTrials,
+          start: 0,
           current: trialing.length,
           end: 1200,
           unit: process.env.lastTrials === 0 ? "" : process.env.lastTrials > trialing.length ? "-" : "+",
