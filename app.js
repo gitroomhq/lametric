@@ -47,7 +47,7 @@ app.get("/stripe", async (req, res) => {
         goalData: {
           start: lastMrr,
           current: mrr,
-          end: mrr,
+          end: 10000,
           unit: "",
         },
         icon: 4989,
@@ -57,8 +57,9 @@ app.get("/stripe", async (req, res) => {
         goalData: {
           start: lastSubs,
           current: active.length,
-          end: active.length,
+          end: 350,
           unit: "",
+
         },
         icon: 52106,
         duration: 5000,
@@ -67,7 +68,7 @@ app.get("/stripe", async (req, res) => {
         goalData: {
           start: lastTrials,
           current: trialing.length,
-          end: trialing.length,
+          end: 1200,
           unit: "",
         },
         icon: 49835,
