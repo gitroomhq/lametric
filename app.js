@@ -5,7 +5,11 @@ const stripe = require("stripe")(process.env.STRIPE_KEY);
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-let lastGitHubStars = 0;
+process.env.lastGitHubStars = 0;
+process.env.lastMrr = 0;
+process.env.lastSubs = 0;
+process.env.lastTrials = 0;
+process.env.lastUsers = 0;
 
 const loadAllUsers = async (page = 1) => {
   const { data } = await (
@@ -46,28 +50,23 @@ const loadAllStripeSubscriptions = async (cursor) => {
   return subscriptions.data;
 };
 
-let lastMrr = 0;
-let lastSubs = 0;
-let lastTrials = 0;
-let lastUsers = 0;
-
 app.get("/users", async (req, res) => {
   const users = await loadAllUsers();
   res.status(200).json({
     frames: [
       {
         goalData: {
-          start: lastUsers,
+          start: process.env.lastUsers,
           current: users,
           end: 10000,
-          unit: lastUsers === 0 || lastUsers === users ? "" : lastUsers > users ? "-" : "+",
+          unit: process.env.lastUsers === 0 ? "" : process.env.lastUsers > users ? "-" : "+",
         },
         icon: 5337
       },
     ],
   });
 
-  lastUsers = users;
+  process.env.lastUsers = users;
 });
 
 app.get("/stripe", async (req, res) => {
@@ -86,10 +85,10 @@ app.get("/stripe", async (req, res) => {
     frames: [
       {
         goalData: {
-          start: lastMrr,
+          start: process.env.lastMrr,
           current: mrr,
           end: 10000,
-          unit: lastMrr === 0 || lastMrr === mrr ? "" : lastMrr > mrr ? "-" : "+",
+          unit: process.env.lastMrr === 0 ? "" : process.env.lastMrr > mrr ? "-" : "+",
         },
         icon: 4989,
         duration: 5000,
@@ -99,17 +98,17 @@ app.get("/stripe", async (req, res) => {
           start: lastSubs,
           current: active.length,
           end: 350,
-          unit: lastSubs === 0 || lastSubs === active.length ? "" : lastSubs > active.length ? "-" : "+",
+          unit: process.env.lastSubs === 0 ? "" : process.env.lastSubs > active.length ? "-" : "+",
         },
         icon: 52106,
         duration: 5000,
       },
       {
         goalData: {
-          start: lastTrials,
+          start: process.env.lastTrials,
           current: trialing.length,
           end: 1200,
-          unit: lastTrials === 0 || lastTrials === trialing.length ? "" : lastTrials > trialing.length ? "-" : "+",
+          unit: process.env.lastTrials === 0 ? "" : process.env.lastTrials > trialing.length ? "-" : "+",
         },
         icon: 49835,
         duration: 5000,
@@ -117,9 +116,9 @@ app.get("/stripe", async (req, res) => {
     ],
   });
 
-  lastMrr = mrr;
-  lastSubs = active.length;
-  lastTrials = trialing.length;
+  process.env.lastMrr = process.env.mrr;
+  process.env.lastSubs = process.env.active.length;
+  process.env.lastTrials = process.env.trialing.length;
 });
 
 app.get("/github", async (req, res) => {
@@ -137,17 +136,17 @@ app.get("/github", async (req, res) => {
     frames: [
       {
         goalData: {
-          start: lastGitHubStars,
+          start: process.env.lastGitHubStars,
           current: +stars,
           end: +stars,
-          unit: lastGitHubStars === 0 || lastGitHubStars === +stars ? "" : lastGitHubStars > +stars ? "-" : "+",
+          unit: process.env.lastGitHubStars === 0 ? "" : process.env.lastGitHubStars > +stars ? "-" : "+",
         },
         icon: 14925,
       },
     ],
   });
 
-  lastGitHubStars = +stars;
+  process.env.lastGitHubStars = +stars;
 });
 
 app.listen(process.env.PORT || 3005, () => {
