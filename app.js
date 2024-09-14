@@ -7,6 +7,27 @@ const { JSDOM } = jsdom;
 
 let lastGitHubStars = 0;
 
+const loadAllUsers = async (page = 1) => {
+  const { data } = await (
+    await fetch(
+      `https://api.beehiiv.com/v2/publications/${process.env.BEEHIIV_PUBLICATION}/subscriptions?limit=100&page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
+        },
+      },
+    )
+  ).json();
+
+  if (data.length !== 100) {
+    return data.length;
+  }
+
+  return data.length + (await loadAllUsers(page + 1));
+};
+
 const loadAllStripeSubscriptions = async (cursor) => {
   const subscriptions = await stripe.subscriptions.list({
     status: "all",
@@ -28,6 +49,26 @@ const loadAllStripeSubscriptions = async (cursor) => {
 let lastMrr = 0;
 let lastSubs = 0;
 let lastTrials = 0;
+let lastUsers = 0;
+
+app.get("/users", async (req, res) => {
+  const users = await loadAllUsers();
+  res.status(200).json({
+    frames: [
+      {
+        goalData: {
+          start: lastUsers,
+          current: users,
+          end: 10000,
+          unit: "",
+        },
+        icon: 5337
+      },
+    ],
+  });
+
+  lastUsers = users;
+});
 
 app.get("/stripe", async (req, res) => {
   const loadAllSubscriptions = (await loadAllStripeSubscriptions()).filter(
@@ -59,7 +100,6 @@ app.get("/stripe", async (req, res) => {
           current: active.length,
           end: 350,
           unit: "",
-
         },
         icon: 52106,
         duration: 5000,
