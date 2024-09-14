@@ -138,7 +138,7 @@ app.get("/github", async (req, res) => {
         goalData: {
           start: process.env.lastGitHubStars,
           current: +stars,
-          end: +stars,
+          end: 10000,
           unit: process.env.lastGitHubStars === 0 ? "" : process.env.lastGitHubStars > +stars ? "-" : "+",
         },
         icon: 14925,
