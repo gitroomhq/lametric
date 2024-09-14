@@ -74,7 +74,6 @@ app.get("/stripe", async (req, res) => {
     (f) => f.status === "active" || f.status === "trialing",
   );
   const active = loadAllSubscriptions.filter((f) => f.status === "active");
-  const trialing = loadAllSubscriptions.filter((f) => f.status === "trialing");
   const mrr = active.reduce((acc, item) => {
     const amount = item.plan.amount / 100; // Convert from cents to dollars
     const interval = item.plan.interval;
@@ -92,17 +91,21 @@ app.get("/stripe", async (req, res) => {
         },
         icon: 4989,
         duration: 5000,
-      },
-      {
-        goalData: {
-          start: 0,
-          current: active.length,
-          end: 350,
-          unit: process.env.lastSubs === 0 ? "" : process.env.lastSubs > active.length ? "-" : "+",
-        },
-        icon: 52106,
-        duration: 5000,
-      },
+      }
+    ],
+  });
+
+  process.env.lastMrr = mrr;
+});
+
+app.get("/trials", async (req, res) => {
+  const loadAllSubscriptions = (await loadAllStripeSubscriptions()).filter(
+    (f) => f.status === "active" || f.status === "trialing",
+  );
+  const trialing = loadAllSubscriptions.filter((f) => f.status === "trialing" && f.cancel_at_period_end === false);
+
+  res.status(200).json({
+    frames: [
       {
         goalData: {
           start: 0,
@@ -116,9 +119,31 @@ app.get("/stripe", async (req, res) => {
     ],
   });
 
-  process.env.lastMrr = mrr;
-  process.env.lastSubs = active.length;
   process.env.lastTrials = trialing.length;
+});
+
+app.get("/subs", async (req, res) => {
+  const loadAllSubscriptions = (await loadAllStripeSubscriptions()).filter(
+    (f) => f.status === "active" || f.status === "trialing",
+  );
+  const active = loadAllSubscriptions.filter((f) => f.status === "active");
+
+  res.status(200).json({
+    frames: [
+      {
+        goalData: {
+          start: 0,
+          current: active.length,
+          end: 350,
+          unit: process.env.lastSubs === 0 ? "" : process.env.lastSubs > active.length ? "-" : "+",
+        },
+        icon: 52106,
+        duration: 5000,
+      },
+    ],
+  });
+
+  process.env.lastSubs = active.length;
 });
 
 app.get("/github", async (req, res) => {
