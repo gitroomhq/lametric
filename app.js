@@ -136,7 +136,7 @@ app.get("/github", async (req, res) => {
     frames: [
       {
         goalData: {
-          start: process.env.lastGitHubStars,
+          start: 0,
           current: +stars,
           end: 10000,
           unit: process.env.lastGitHubStars === 0 ? "" : process.env.lastGitHubStars > +stars ? "-" : "+",
