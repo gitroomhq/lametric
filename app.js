@@ -116,9 +116,9 @@ app.get("/stripe", async (req, res) => {
     ],
   });
 
-  process.env.lastMrr = process.env.mrr;
-  process.env.lastSubs = process.env.active.length;
-  process.env.lastTrials = process.env.trialing.length;
+  process.env.lastMrr = mrr;
+  process.env.lastSubs = active.length;
+  process.env.lastTrials = trialing.length;
 });
 
 app.get("/github", async (req, res) => {
